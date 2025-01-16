@@ -97,7 +97,7 @@ class EmployeeloanApplication(Document):
 					"applicant_type": "Employee",
 					"company": self.company,
 					"posting_date": self.posting_date,
-					"loan_type": self.loan_type,
+					"loan_product": self.loan_type,
 					"loan_amount_in_loan_currency": self.loan_amount,
 					"rate_of_interest": 0,
 					"exchange_rate": self.exchange_rate, 

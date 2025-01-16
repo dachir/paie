@@ -33,6 +33,57 @@ from paie.override.journal_entry import CustomJournalEntry
 from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import process_loan_interest_accrual_for_term_loans
 
 class CustomPayrollEntry(PayrollEntry):
+    @frappe.whitelist()
+    def fill_employee_details(self):
+        filters = self.make_filters()
+        employees = self.get_emp_list()
+        self.set("employees", [])
+
+        if not employees:
+            error_msg = _(
+                "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
+            ).format(
+                frappe.bold(self.company),
+                frappe.bold(self.currency),
+                frappe.bold(self.payroll_payable_account),
+            )
+            if self.branch:
+                error_msg += "<br>" + _("Branch: {0}").format(frappe.bold(self.branch))
+            if self.department:
+                error_msg += "<br>" + _("Department: {0}").format(frappe.bold(self.department))
+            if self.designation:
+                error_msg += "<br>" + _("Designation: {0}").format(frappe.bold(self.designation))
+            if self.start_date:
+                error_msg += "<br>" + _("Start date: {0}").format(frappe.bold(self.start_date))
+            if self.end_date:
+                error_msg += "<br>" + _("End date: {0}").format(frappe.bold(self.end_date))
+            frappe.throw(error_msg, title=_("No employees found"))
+
+        self.set("employees", employees)
+        self.number_of_employees = len(self.employees)
+        self.update_employees_with_withheld_salaries()
+
+        return self.get_employees_with_unmarked_attendance()
+
+    def make_filters(self):
+        filters = frappe._dict(
+            company=self.company,
+            branch=self.branch,
+            department=self.department,
+            designation=self.designation,
+            grade=self.grade,
+            currency=self.currency,
+            start_date=self.start_date,
+            end_date=self.end_date,
+            payroll_payable_account=self.payroll_payable_account,
+            salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
+            employment_type=self.employment_type,
+        )
+
+        if not self.salary_slip_based_on_timesheet:
+            filters.update(dict(payroll_frequency=self.payroll_frequency))
+
+        return filters
 
     def before_save(self):
         if frappe.db.get_single_value("Custom Paie Settings", "automatic_seniority"):
@@ -400,7 +451,7 @@ class CustomPayrollEntry(PayrollEntry):
         Returns list of active employees based on selected criteria
         and for which salary structure exists
         """
-        self.check_mandatory()
+        #self.check_mandatory()
         filters = self.make_filters()
         cond = self.get_filter_condition2(filters)
         cond += self.get_joining_relieving_condition2(self.start_date, self.end_date)
@@ -418,6 +469,7 @@ class CustomPayrollEntry(PayrollEntry):
             cond += "and t2.salary_structure IN %(sal_struct)s "
             cond += "and t2.payroll_payable_account = %(payroll_payable_account)s "
             cond += "and %(from_date)s >= t2.from_date"
+
             emp_list = self.get_emp_list2(sal_struct, cond, self.end_date, self.payroll_payable_account)
             emp_list = self.remove_payrolled_employees2(emp_list, self.start_date, self.end_date)
             return emp_list

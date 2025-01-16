@@ -142,7 +142,7 @@ class CustomSalarySlip(SalarySlip):
 			for loan in loan_details:
 				if loan.is_term_loan:
 					process_loan_interest_accrual_for_term_loans(
-						posting_date=self.posting_date, loan_type=loan.loan_type, loan=loan.name
+						posting_date=self.posting_date, loan_product=loan.loan_product, loan=loan.name
 					)
 
 		return loan_details
@@ -241,8 +241,8 @@ class CustomSalarySlip(SalarySlip):
 	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list, relieving_date):
 		lwp = 0
 		leave_type_lwp = []
-		holidays = "','".join(holidays)
-		feries = holidays.split(',')
+		#holidays = "','".join(holidays)
+		feries = holidays
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
 		)
