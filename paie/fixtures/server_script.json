@@ -104,13 +104,13 @@
   "doctype_event": "Before Validate",
   "enable_rate_limit": 0,
   "event_frequency": "All",
-  "modified": "2025-01-16 20:33:17.332651",
+  "modified": "2025-01-24 12:50:08.469213",
   "module": "Paie Congo",
   "name": "Update Loan Amount",
   "rate_limit_count": 5,
   "rate_limit_seconds": 86400,
   "reference_doctype": "Loan",
-  "script": "#if doc.loan_application and not doc.loan_amount:\r\n#\tdoc.loan_amount = frappe.db.get_value(\"Loan Application\", doc.loan_application, \"loan_amount\")\r\n\t\r\nif not doc.loan_amount:\r\n\tdoc.loan_amount = frappe.utils.flt(doc.loan_amount_in_loan_currency * doc.exchange_rate,2)\r\n\t\t\t\r\n\t\t\t\r\n#if not doc.monthly_repayment_amount:\r\n#\tdoc.monthly_repayment_amount = doc.monthly_repayment_amount_in_loan_currency * doc.exchange_rate\r\n\r\nlp = frappe.get_doc(\"Loan Product\", doc.loan_product)\r\nif not doc.payment_account:\r\n    doc.payment_account = lp.payment_account\r\nif not doc.loan_account:\r\n    doc.loan_account = lp.loan_account\r\nif not doc.interest_income_account:\r\n    doc.interest_income_account = lp.interest_income_account\r\nif not doc.penalty_income_account:\r\n    doc.penalty_income_account = lp.penalty_income_account\r\n    \r\n    ",
+  "script": "#if doc.loan_application and not doc.loan_amount:\r\n#\tdoc.loan_amount = frappe.db.get_value(\"Loan Application\", doc.loan_application, \"loan_amount\")\r\n\t\r\nif not doc.loan_amount:\r\n\tdoc.loan_amount = frappe.utils.flt(doc.loan_amount_in_loan_currency * doc.exchange_rate,9)\r\n\t\t\t\r\n\t\t\t\r\nif not doc.monthly_repayment_amount:\r\n\tdoc.monthly_repayment_amount = doc.monthly_repayment_amount_in_loan_currency * doc.exchange_rate\r\n\r\nlp = frappe.get_doc(\"Loan Product\", doc.loan_product)\r\nif not doc.payment_account:\r\n    doc.payment_account = lp.payment_account\r\nif not doc.loan_account:\r\n    doc.loan_account = lp.loan_account\r\nif not doc.interest_income_account:\r\n    doc.interest_income_account = lp.interest_income_account\r\nif not doc.penalty_income_account:\r\n    doc.penalty_income_account = lp.penalty_income_account\r\n    \r\n    ",
   "script_type": "DocType Event"
  }
 ]
