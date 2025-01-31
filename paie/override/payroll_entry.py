@@ -452,6 +452,8 @@ class CustomPayrollEntry(PayrollEntry):
             ss_obj = frappe.get_doc("Salary Slip", ss[0])
             frappe.db.set_value("Salary Slip", ss_obj.name, "journal_entry", jv_name)
 
+            
+
     def get_emp_list(self):
         """
         Returns list of active employees based on selected criteria
