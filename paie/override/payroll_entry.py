@@ -331,7 +331,7 @@ class CustomPayrollEntry(PayrollEntry):
 
         payroll_entry.db_set({"error_message": error_message, "status": "Failed"})
 
-    def make_accrual_jv_entry(self):
+    def make_accrual_jv_entry(self, submitted_salary_slips):
         self.check_permission("write")
         earnings = self.get_salary_component_total(component_type="earnings") or {}
         deductions = self.get_salary_component_total(component_type="deductions") or {}
