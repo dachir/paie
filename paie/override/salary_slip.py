@@ -241,6 +241,7 @@ class CustomSalarySlip(SalarySlip):
 	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list, relieving_date):
 		lwp = 0
 		leave_type_lwp = []
+		
 		if isinstance(holidays, str):
 			#holidays = "','".join(holidays)
 			holidays = [h.strip("'") for h in holidays.split(",")]
