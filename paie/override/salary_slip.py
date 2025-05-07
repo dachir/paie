@@ -129,7 +129,7 @@ class CustomSalarySlip(SalarySlip):
 		
 		loan_details = frappe.get_all(
 			"Loan",
-			fields=["name", "interest_income_account", "loan_account", "loan_type", "is_term_loan", "exchange_rate"],
+			fields=["name", "interest_income_account", "loan_account", "loan_product", "is_term_loan", "exchange_rate"],
 			filters={
 				"applicant": self.employee,
 				"docstatus": 1,
@@ -174,7 +174,7 @@ class CustomSalarySlip(SalarySlip):
 							"interest_amount_foreign_currency": amounts["interest_amount"] / loan.exchange_rate,
 							"principal_amount_foreign_currency": amounts["payable_principal_amount"] / loan.exchange_rate,
 							"loan_exchange_rate":loan.exchange_rate,
-							"loan_type": loan.loan_type,
+							"loan_product": loan.loan_product,
 						},
 					)
 
@@ -349,7 +349,7 @@ class CustomSalarySlip(SalarySlip):
 					self.employee,
 					self.company,
 					self.posting_date,
-					loan.loan_type,
+					loan.loan_product,
 					"Regular Payment",
 					loan.interest_amount,
 					loan.principal_amount,
