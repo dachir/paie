@@ -241,7 +241,10 @@ class CustomSalarySlip(SalarySlip):
 	def calculate_lwp_or_ppl_based_on_leave_application(self, holidays, working_days_list, relieving_date):
 		lwp = 0
 		leave_type_lwp = []
-		#holidays = "','".join(holidays)
+		if isinstance(holidays, str):
+			#holidays = "','".join(holidays)
+			holidays = [h.strip("'") for h in holidays.split(",")]
+
 		feries = holidays
 		daily_wages_fraction_for_half_day = (
 			flt(frappe.db.get_value("Payroll Settings", None, "daily_wages_fraction_for_half_day")) or 0.5
